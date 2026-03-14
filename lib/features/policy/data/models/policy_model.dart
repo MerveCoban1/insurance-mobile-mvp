@@ -1,4 +1,5 @@
 import 'package:insurance_mobile/core/types/json_map.dart';
+import 'package:insurance_mobile/core/error/exceptions.dart';
 import 'package:insurance_mobile/features/policy/domain/entities/policy.dart';
 
 class PolicyModel {
@@ -23,15 +24,30 @@ class PolicyModel {
   final DateTime endDate;
 
   factory PolicyModel.fromJson(JsonMap json) {
+    final id = json['id'];
+    final startDateValue = json['startDate'] ?? json['effectiveDate'];
+    final endDateValue = json['endDate'] ?? json['expiryDate'];
+    final typeValue = json['type'] ?? json['productName'];
+    final coverageAmount = json['coverageAmount'];
+
+    if (id == null ||
+        startDateValue == null ||
+        endDateValue == null ||
+        coverageAmount is! num) {
+      throw const ParsingException(
+        'Policy response is missing required fields.',
+      );
+    }
+
     return PolicyModel(
-      id: json['id'] as String,
-      policyNumber: json['policyNumber'] as String,
-      holderName: json['holderName'] as String,
-      type: json['type'] as String,
-      coverageAmount: (json['coverageAmount'] as num).toDouble(),
-      status: json['status'] as String? ?? 'active',
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
+      id: id.toString(),
+      policyNumber: (json['policyNumber'] as String?) ?? 'POL-${id.toString()}',
+      holderName: (json['holderName'] as String?) ?? 'Policy Holder',
+      type: (typeValue as String?) ?? PolicyType.vehicle.name,
+      coverageAmount: coverageAmount.toDouble(),
+      status: (json['status'] as String? ?? 'active').toLowerCase(),
+      startDate: DateTime.parse(startDateValue as String),
+      endDate: DateTime.parse(endDateValue as String),
     );
   }
 
@@ -76,8 +92,10 @@ class PolicyModel {
 }
 
 PolicyType _policyTypeFromValue(String value) {
+  final normalizedValue = value.trim().toLowerCase();
+
   return PolicyType.values.firstWhere(
-    (type) => type.name == value,
+    (type) => type.name == normalizedValue,
     orElse: () => PolicyType.vehicle,
   );
 }

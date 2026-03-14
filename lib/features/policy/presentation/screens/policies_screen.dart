@@ -23,31 +23,15 @@ class PolicyListScreen extends ConsumerWidget {
       body: policiesAsync.when(
         data: (policies) {
           if (policies.isEmpty) {
-            return AppCard(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.shield_outlined,
-                    size: AppSpacing.xl,
-                    color: context.colorScheme.primary,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    context.l10n.noActivePolicies,
-                    style: context.textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    context.l10n.noPoliciesDescription,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+            return AppMessageCard(
+              centerAligned: true,
+              leading: Icon(
+                Icons.shield_outlined,
+                size: AppSpacing.xl,
+                color: context.colorScheme.primary,
               ),
+              title: context.l10n.noActivePolicies,
+              subtitle: context.l10n.noPoliciesDescription,
             );
           }
 
@@ -107,12 +91,10 @@ class _PolicyListIntroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
+    return AppMessageCard(
       color: context.colorScheme.primaryContainer.withValues(alpha: 0.42),
-      child: AppSectionHeader(
-        title: context.l10n.policyListIntroTitle,
-        subtitle: context.l10n.policyListIntroSubtitle,
-      ),
+      title: context.l10n.policyListIntroTitle,
+      subtitle: context.l10n.policyListIntroSubtitle,
     );
   }
 }

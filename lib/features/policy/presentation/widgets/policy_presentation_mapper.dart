@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:insurance_mobile/features/policy/domain/entities/policy.dart';
 import 'package:insurance_mobile/shared/extensions/build_context_extensions.dart';
 
@@ -21,17 +20,15 @@ extension PolicyPresentationMapper on Policy {
   }
 
   String formatCoverageAmount(BuildContext context) {
-    return NumberFormat.simpleCurrency(
-      locale: Localizations.localeOf(context).toString(),
-    ).format(coverageAmount);
+    return context.formatCurrency(coverageAmount);
   }
 
   String formatStartDate(BuildContext context) {
-    return _formatDate(context, startDate);
+    return context.formatDateShort(startDate);
   }
 
   String formatEndDate(BuildContext context) {
-    return _formatDate(context, endDate);
+    return context.formatDateShort(endDate);
   }
 
   String localizedStatus(BuildContext context) {
@@ -65,10 +62,4 @@ extension PolicyPresentationMapper on Policy {
       _ => Theme.of(context).colorScheme.surfaceContainerHighest,
     };
   }
-}
-
-String _formatDate(BuildContext context, DateTime date) {
-  return DateFormat.yMMMd(
-    Localizations.localeOf(context).toString(),
-  ).format(date);
 }

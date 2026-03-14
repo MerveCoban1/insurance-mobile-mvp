@@ -16,46 +16,32 @@ class ClaimSubmissionSuccessScreen extends StatelessWidget {
       automaticallyImplyLeading: false,
       padding: context.pagePadding,
       body: Center(
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: context.colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(AppSpacing.xl),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Icon(
-                    Icons.check_rounded,
-                    color: context.colorScheme.secondary,
-                    size: AppSpacing.xl,
-                  ),
-                ),
+        child: AppMessageCard(
+          centerAligned: true,
+          color: context.colorScheme.secondaryContainer.withValues(alpha: 0.32),
+          leading: DecoratedBox(
+            decoration: BoxDecoration(
+              color: context.colorScheme.surface,
+              borderRadius: BorderRadius.circular(AppSpacing.xl),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Icon(
+                Icons.check_rounded,
+                color: context.colorScheme.secondary,
+                size: AppSpacing.xl,
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                context.l10n.claimSuccessHeadline,
-                style: context.textTheme.titleLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                context.l10n.claimSuccessDescription,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AppButton(
-                label: context.l10n.backToHome,
-                onPressed: () {
-                  context.go(AppRoutes.policiesPath);
-                },
-              ),
-            ],
+            ),
           ),
+          title: context.l10n.claimSuccessHeadline,
+          subtitle: context.l10n.claimSuccessDescription,
+          action: AppButton(
+            label: context.l10n.backToHome,
+            onPressed: () {
+              context.go(AppRoutes.policiesPath);
+            },
+          ),
+        ),
       ),
     );
   }

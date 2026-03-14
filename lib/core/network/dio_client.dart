@@ -27,6 +27,8 @@ class DioClient {
         connectTimeout: _config.connectTimeout,
         receiveTimeout: _config.receiveTimeout,
         sendTimeout: _config.sendTimeout,
+        responseType: ResponseType.json,
+        contentType: ApiConstants.jsonMimeType,
         headers: const {
           ApiConstants.contentTypeHeader: ApiConstants.jsonMimeType,
           ApiConstants.acceptHeader: ApiConstants.jsonMimeType,
@@ -38,13 +40,7 @@ class DioClient {
     dio.interceptors.add(_ErrorInterceptor(logger: _logger));
 
     if (kDebugMode) {
-      dio.interceptors.add(
-        LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-          logPrint: (message) => _logger.info(message.toString()),
-        ),
-      );
+      dio.interceptors.add(const _DebugLoggingInterceptor());
     }
 
     return dio;
@@ -119,5 +115,42 @@ class _ErrorInterceptor extends Interceptor {
           statusCode: statusCode,
         );
     }
+  }
+}
+
+class _DebugLoggingInterceptor extends Interceptor {
+  const _DebugLoggingInterceptor();
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    debugPrint('[Dio] ${options.method} ${options.baseUrl}${options.path}');
+
+    if (options.data != null) {
+      debugPrint('[Dio] Request body: ${options.data}');
+    }
+
+    handler.next(options);
+  }
+
+  @override
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    debugPrint(
+      '[Dio] Response ${response.statusCode} ${response.requestOptions.method} '
+      '${response.requestOptions.baseUrl}${response.requestOptions.path}',
+    );
+    handler.next(response);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    debugPrint(
+      '[Dio] Response ${err.response?.statusCode ?? 'error'} '
+      '${err.requestOptions.method} '
+      '${err.requestOptions.baseUrl}${err.requestOptions.path}',
+    );
+    handler.next(err);
   }
 }

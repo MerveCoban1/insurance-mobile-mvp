@@ -38,7 +38,15 @@ class ValidationFailure extends Failure {
   });
 }
 
-class UnexpectedFailure extends Failure {
+class UnknownFailure extends Failure {
+  const UnknownFailure({
+    required super.message,
+    super.statusCode,
+    super.stackTrace,
+  });
+}
+
+class UnexpectedFailure extends UnknownFailure {
   const UnexpectedFailure({
     required super.message,
     super.statusCode,

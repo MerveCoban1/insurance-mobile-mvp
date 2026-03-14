@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:insurance_mobile/features/claim/presentation/providers/providers.dart';
 import 'package:insurance_mobile/navigation/navigation.dart';
 import 'package:insurance_mobile/shared/design/design.dart';
@@ -19,24 +18,28 @@ class ClaimFormScreen extends ConsumerStatefulWidget {
 }
 
 class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
+  late final ClaimFormNotifier _claimFormNotifier;
+
   @override
   void initState() {
     super.initState();
+    _claimFormNotifier = ref.read(claimFormProvider.notifier);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
         return;
       }
 
-      ref
-          .read(claimFormProvider.notifier)
-          .initialize(policyId: widget.initialPolicyId);
+      _claimFormNotifier.initialize(policyId: widget.initialPolicyId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<ClaimFormState>(claimFormProvider, (previous, next) {
-      if (previous?.hasSubmitted == true || !next.hasSubmitted) {
+    ref.listen<bool>(claimFormProvider.select((state) => state.hasSubmitted), (
+      previous,
+      next,
+    ) {
+      if (previous == true || !next) {
         return;
       }
 
@@ -67,16 +70,10 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    context.l10n.claimFormIntroTitle,
-                    style: context.textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    context.l10n.claimFormIntroSubtitle,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
+                  AppMessageCard(
+                    useCard: false,
+                    title: context.l10n.claimFormIntroTitle,
+                    subtitle: context.l10n.claimFormIntroSubtitle,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   _PolicyReferenceCard(policyId: formState.policyId!),
@@ -96,7 +93,7 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
                   _ClaimDateField(
                     value: formState.incidentDate == null
                         ? context.l10n.claimIncidentDateHint
-                        : _formatDate(context, formState.incidentDate!),
+                        : context.formatDateShort(formState.incidentDate!),
                     hasValue: formState.incidentDate != null,
                     enabled: !formState.isSubmitting,
                     onPressed: formState.isSubmitting
@@ -126,9 +123,7 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
                     ),
                     minLines: 4,
                     enabled: !formState.isSubmitting,
-                    onChanged: ref
-                        .read(claimFormProvider.notifier)
-                        .updateIncidentDescription,
+                    onChanged: _claimFormNotifier.updateIncidentDescription,
                     errorText: _descriptionError(context, formState),
                   ),
                 ],
@@ -137,26 +132,9 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
             if (_submissionErrorText(context, formState) case final errorText?)
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.md),
-                child: AppCard(
-                  color: context.colorScheme.errorContainer,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: context.colorScheme.onErrorContainer,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Expanded(
-                        child: Text(
-                          errorText,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: context.colorScheme.onErrorContainer,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: AppFeedbackCard(
+                  tone: AppFeedbackTone.error,
+                  message: errorText,
                 ),
               ),
             SizedBox(height: spacing),
@@ -166,7 +144,7 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
                   : context.l10n.submitClaim,
               onPressed: formState.isSubmitting
                   ? null
-                  : ref.read(claimFormProvider.notifier).submit,
+                  : _claimFormNotifier.submit,
             ),
           ],
         ),
@@ -185,9 +163,11 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
       lastDate: now,
     );
 
-    if (selectedDate != null) {
-      controller.updateIncidentDate(selectedDate);
+    if (!mounted || selectedDate == null) {
+      return;
     }
+
+    controller.updateIncidentDate(selectedDate);
   }
 }
 
@@ -205,18 +185,11 @@ class _PolicyReferenceCard extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.l10n.policyReference,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(policyId, style: context.textTheme.titleMedium),
-          ],
+        child: AppLabeledValue(
+          label: context.l10n.policyReference,
+          value: policyId,
+          compact: true,
+          isLast: true,
         ),
       ),
     );
@@ -308,10 +281,4 @@ String? _submissionErrorText(BuildContext context, ClaimFormState state) {
     ClaimFormSubmissionError.submissionFailed =>
       context.l10n.claimSubmissionFailed,
   };
-}
-
-String _formatDate(BuildContext context, DateTime date) {
-  return DateFormat.yMMMd(
-    Localizations.localeOf(context).toString(),
-  ).format(date);
 }

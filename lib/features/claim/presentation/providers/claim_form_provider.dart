@@ -16,11 +16,11 @@ class ClaimFormNotifier extends Notifier<ClaimFormState> {
   }
 
   void initialize({String? policyId}) {
-    if (policyId == null || policyId == state.policyId) {
+    if (policyId == null) {
       return;
     }
 
-    state = state.copyWith(policyId: policyId);
+    state = ClaimFormState(policyId: policyId);
   }
 
   void updateIncidentDate(DateTime? value) {

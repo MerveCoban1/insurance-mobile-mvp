@@ -101,27 +101,27 @@ class _PolicyDetailContent extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
-                _DetailRow(
+                AppLabeledValue(
                   label: context.l10n.policyHolder,
                   value: policy.holderName,
                 ),
-                _DetailRow(
+                AppLabeledValue(
                   label: context.l10n.policyNumber,
                   value: policy.policyNumber,
                 ),
-                _DetailRow(
+                AppLabeledValue(
                   label: context.l10n.coverageAmount,
                   value: policy.formatCoverageAmount(context),
                 ),
-                _DetailRow(
+                AppLabeledValue(
                   label: context.l10n.startDate,
                   value: policy.formatStartDate(context),
                 ),
-                _DetailRow(
+                AppLabeledValue(
                   label: context.l10n.endDate,
                   value: policy.formatEndDate(context),
                 ),
-                _DetailRow(
+                AppLabeledValue(
                   label: context.l10n.status,
                   value: policy.localizedStatus(context),
                   isLast: true,
@@ -130,92 +130,22 @@ class _PolicyDetailContent extends StatelessWidget {
             ),
           ),
           SizedBox(height: spacing),
-          AppCard(
+          AppMessageCard(
             color: context.colorScheme.secondaryContainer.withValues(
               alpha: 0.45,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.l10n.policyClaimCtaTitle,
-                  style: context.textTheme.titleMedium,
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  context.l10n.policyClaimCtaSubtitle,
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: context.l10n.submitClaim,
-                  isExpanded: Responsive.isMobile(context),
-                  onPressed: () {
-                    context.push(
-                      AppRoutes.claimFormLocation(policyId: policy.id),
-                    );
-                  },
-                ),
-              ],
+            title: context.l10n.policyClaimCtaTitle,
+            subtitle: context.l10n.policyClaimCtaSubtitle,
+            action: AppButton(
+              label: context.l10n.submitClaim,
+              isExpanded: Responsive.isMobile(context),
+              onPressed: () {
+                context.push(AppRoutes.claimFormLocation(policyId: policy.id));
+              },
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({
-    required this.label,
-    required this.value,
-    this.isLast = false,
-  });
-
-  final String label;
-  final String value;
-  final bool isLast;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: isLast ? 0 : AppSpacing.md),
-      child: Responsive.isMobile(context)
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(value, style: context.textTheme.titleSmall),
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    label,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    value,
-                    textAlign: TextAlign.right,
-                    style: context.textTheme.titleSmall,
-                  ),
-                ),
-              ],
-            ),
     );
   }
 }

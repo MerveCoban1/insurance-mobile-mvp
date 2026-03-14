@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import 'package:insurance_mobile/core/error/exceptions.dart';
+import 'package:insurance_mobile/core/network/api_constants.dart';
 import 'package:insurance_mobile/features/claim/data/models/claim_model.dart';
 
 abstract class ClaimRemoteDataSource {
@@ -23,9 +24,20 @@ class ClaimRemoteDataSourceImpl implements ClaimRemoteDataSource {
         throw const AppException('Claim requires a policy reference.');
       }
 
-      await Future<void>.delayed(const Duration(milliseconds: 700));
+      if (_shouldUseMockResponse) {
+        await Future<void>.delayed(const Duration(milliseconds: 700));
+        return;
+      }
+
+      await _dio.post<void>(ApiConstants.claims, data: claim.toJson());
+    } on AppException {
+      rethrow;
     } catch (error) {
       throw normalizeException(error);
     }
+  }
+
+  bool get _shouldUseMockResponse {
+    return _dio.options.baseUrl.contains('insurance-app.com');
   }
 }

@@ -21,12 +21,12 @@ abstract final class FailureMapper {
         message: exception.message,
         stackTrace: stackTrace,
       ),
-      ParsingException() => UnexpectedFailure(
+      ParsingException() => UnknownFailure(
         message: exception.message,
         statusCode: exception.statusCode,
         stackTrace: stackTrace,
       ),
-      _ => UnexpectedFailure(
+      _ => UnknownFailure(
         message: exception.message,
         statusCode: exception.statusCode,
         stackTrace: stackTrace,

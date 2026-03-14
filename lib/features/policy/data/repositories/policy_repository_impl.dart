@@ -25,7 +25,7 @@ class PolicyRepositoryImpl implements PolicyRepository {
       );
     } catch (error, stackTrace) {
       return Result.failure(
-        UnexpectedFailure(message: error.toString(), stackTrace: stackTrace),
+        UnknownFailure(message: error.toString(), stackTrace: stackTrace),
       );
     }
   }
