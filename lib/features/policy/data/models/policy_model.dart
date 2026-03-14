@@ -6,29 +6,32 @@ class PolicyModel {
     required this.id,
     required this.policyNumber,
     required this.holderName,
-    required this.productName,
-    required this.status,
-    required this.effectiveDate,
-    required this.expiryDate,
+    required this.type,
+    required this.coverageAmount,
+    required this.startDate,
+    required this.endDate,
+    this.status = 'active',
   });
 
   final String id;
   final String policyNumber;
   final String holderName;
-  final String productName;
+  final String type;
+  final double coverageAmount;
   final String status;
-  final DateTime effectiveDate;
-  final DateTime expiryDate;
+  final DateTime startDate;
+  final DateTime endDate;
 
   factory PolicyModel.fromJson(JsonMap json) {
     return PolicyModel(
       id: json['id'] as String,
       policyNumber: json['policyNumber'] as String,
       holderName: json['holderName'] as String,
-      productName: json['productName'] as String,
-      status: json['status'] as String,
-      effectiveDate: DateTime.parse(json['effectiveDate'] as String),
-      expiryDate: DateTime.parse(json['expiryDate'] as String),
+      type: json['type'] as String,
+      coverageAmount: (json['coverageAmount'] as num).toDouble(),
+      status: json['status'] as String? ?? 'active',
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
     );
   }
 
@@ -37,10 +40,11 @@ class PolicyModel {
       'id': id,
       'policyNumber': policyNumber,
       'holderName': holderName,
-      'productName': productName,
+      'type': type,
+      'coverageAmount': coverageAmount,
       'status': status,
-      'effectiveDate': effectiveDate.toIso8601String(),
-      'expiryDate': expiryDate.toIso8601String(),
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
     };
   }
 
@@ -49,10 +53,11 @@ class PolicyModel {
       id: id,
       policyNumber: policyNumber,
       holderName: holderName,
-      productName: productName,
+      type: _policyTypeFromValue(type),
+      coverageAmount: coverageAmount,
       status: status,
-      effectiveDate: effectiveDate,
-      expiryDate: expiryDate,
+      startDate: startDate,
+      endDate: endDate,
     );
   }
 
@@ -61,10 +66,18 @@ class PolicyModel {
       id: entity.id,
       policyNumber: entity.policyNumber,
       holderName: entity.holderName,
-      productName: entity.productName,
+      type: entity.type.name,
+      coverageAmount: entity.coverageAmount,
       status: entity.status,
-      effectiveDate: entity.effectiveDate,
-      expiryDate: entity.expiryDate,
+      startDate: entity.startDate,
+      endDate: entity.endDate,
     );
   }
+}
+
+PolicyType _policyTypeFromValue(String value) {
+  return PolicyType.values.firstWhere(
+    (type) => type.name == value,
+    orElse: () => PolicyType.vehicle,
+  );
 }

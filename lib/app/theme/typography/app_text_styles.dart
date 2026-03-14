@@ -23,13 +23,23 @@ abstract final class AppTextStyles {
         fontWeight: FontWeight.w600,
         color: colorScheme.onSurface,
       ),
+      headlineSmall: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        color: colorScheme.onSurface,
+      ),
       titleLarge: TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.w600,
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
         color: colorScheme.onSurface,
       ),
       titleMedium: TextStyle(
         fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onSurface,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 14,
         fontWeight: FontWeight.w600,
         color: colorScheme.onSurface,
       ),
@@ -46,12 +56,17 @@ abstract final class AppTextStyles {
       bodySmall: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w400,
-        color: colorScheme.onSurface.withValues(alpha: 0.72),
+        color: colorScheme.onSurfaceVariant,
       ),
       labelLarge: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
         color: colorScheme.onPrimary,
+      ),
+      labelMedium: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onSurfaceVariant,
       ),
     );
   }

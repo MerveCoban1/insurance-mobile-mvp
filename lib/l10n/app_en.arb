@@ -12,6 +12,54 @@
   "@policyDetails": {
     "description": "Title for the policy detail route."
   },
+  "vehicleInsurance": "Vehicle Insurance",
+  "@vehicleInsurance": {
+    "description": "Label for vehicle insurance policies."
+  },
+  "healthInsurance": "Health Insurance",
+  "@healthInsurance": {
+    "description": "Label for health insurance policies."
+  },
+  "homeInsurance": "Home Insurance",
+  "@homeInsurance": {
+    "description": "Label for home insurance policies."
+  },
+  "coverageAmount": "Coverage Amount",
+  "@coverageAmount": {
+    "description": "Label for a policy coverage amount."
+  },
+  "policyNumber": "Policy Number",
+  "@policyNumber": {
+    "description": "Label for a policy number."
+  },
+  "status": "Status",
+  "@status": {
+    "description": "Label for policy status."
+  },
+  "policyStatusActive": "Active",
+  "@policyStatusActive": {
+    "description": "Label for an active policy status."
+  },
+  "policyStatusInactive": "Inactive",
+  "@policyStatusInactive": {
+    "description": "Label for an inactive policy status."
+  },
+  "policyStatusPending": "Pending",
+  "@policyStatusPending": {
+    "description": "Label for a pending policy status."
+  },
+  "policyStatusExpired": "Expired",
+  "@policyStatusExpired": {
+    "description": "Label for an expired policy status."
+  },
+  "startDate": "Start Date",
+  "@startDate": {
+    "description": "Label for a policy or claim start date."
+  },
+  "endDate": "End Date",
+  "@endDate": {
+    "description": "Label for a policy end date."
+  },
   "submitClaim": "Submit Claim",
   "@submitClaim": {
     "description": "Title for the claim submission route."
@@ -23,6 +71,146 @@
   "incidentDescription": "Incident Description",
   "@incidentDescription": {
     "description": "Claim incident description field label."
+  },
+  "incidentDescriptionHint": "Describe what happened",
+  "@incidentDescriptionHint": {
+    "description": "Hint text for the claim description field."
+  },
+  "descriptionRequired": "Description is required.",
+  "@descriptionRequired": {
+    "description": "Validation message when the incident description is missing."
+  },
+  "incidentDateRequired": "Incident date is required.",
+  "@incidentDateRequired": {
+    "description": "Validation message when the incident date is missing."
+  },
+  "selectIncidentDate": "Select incident date",
+  "@selectIncidentDate": {
+    "description": "Action label for choosing the incident date."
+  },
+  "claimFormDescription": "Provide the incident details below to submit your claim.",
+  "@claimFormDescription": {
+    "description": "Helper copy shown above the claim form."
+  },
+  "submittingClaim": "Submitting Claim...",
+  "@submittingClaim": {
+    "description": "Button label shown while a claim is being submitted."
+  },
+  "claimSubmittedMessage": "Your claim has been submitted successfully.",
+  "@claimSubmittedMessage": {
+    "description": "Snackbar message shown after a successful claim submission."
+  },
+  "claimSubmissionFailed": "We could not submit your claim right now.",
+  "@claimSubmissionFailed": {
+    "description": "Error message shown when claim submission fails."
+  },
+  "policyReferenceRequired": "A policy reference is required to submit a claim.",
+  "@policyReferenceRequired": {
+    "description": "Error message shown when a claim is opened without a policy."
+  },
+  "noActivePolicies": "No active policies found.",
+  "@noActivePolicies": {
+    "description": "Empty state message for the policy list."
+  },
+  "noPoliciesDescription": "Once policies are issued, they will appear here for quick access.",
+  "@noPoliciesDescription": {
+    "description": "Supporting copy shown when the user has no policies."
+  },
+  "loadingPolicies": "Loading policies...",
+  "@loadingPolicies": {
+    "description": "Loading message for the policy list."
+  },
+  "policyListIntroTitle": "Protected with confidence",
+  "@policyListIntroTitle": {
+    "description": "Intro title shown at the top of the policy list screen."
+  },
+  "policyListIntroSubtitle": "Review your active coverage, track policy status, and access claim flows from one place.",
+  "@policyListIntroSubtitle": {
+    "description": "Intro subtitle shown at the top of the policy list screen."
+  },
+  "policyListSectionSubtitle": "Your available policies are organized below for quick review.",
+  "@policyListSectionSubtitle": {
+    "description": "Subtitle for the policy list section heading."
+  },
+  "policyListLoadError": "We could not load your policies right now.",
+  "@policyListLoadError": {
+    "description": "Error message shown when the policy list fails to load."
+  },
+  "policyNotFound": "The selected policy could not be found.",
+  "@policyNotFound": {
+    "description": "Error message shown when a policy detail cannot be found."
+  },
+  "loadingPolicyDetails": "Loading policy details...",
+  "@loadingPolicyDetails": {
+    "description": "Loading message for the policy detail screen."
+  },
+  "policyHolder": "Policy Holder",
+  "@policyHolder": {
+    "description": "Label for the person covered by the policy."
+  },
+  "policyTerm": "Policy Term",
+  "@policyTerm": {
+    "description": "Label for the validity period of a policy."
+  },
+  "policyOverview": "Overview",
+  "@policyOverview": {
+    "description": "Section title for policy details."
+  },
+  "policyOverviewSubtitle": "Review the core coverage details and validity information for this policy.",
+  "@policyOverviewSubtitle": {
+    "description": "Section subtitle for policy details."
+  },
+  "policyClaimCtaTitle": "Need to report an incident?",
+  "@policyClaimCtaTitle": {
+    "description": "Headline for the claim call to action on the policy detail screen."
+  },
+  "policyClaimCtaSubtitle": "Start a claim in minutes and keep this policy reference attached automatically.",
+  "@policyClaimCtaSubtitle": {
+    "description": "Supporting copy for the claim call to action on the policy detail screen."
+  },
+  "policyDetailLoadError": "We could not load this policy right now.",
+  "@policyDetailLoadError": {
+    "description": "Error message shown when the policy detail fails to load."
+  },
+  "policyReference": "Policy Reference",
+  "@policyReference": {
+    "description": "Label for a policy reference identifier."
+  },
+  "claimFormIntroTitle": "Tell us what happened",
+  "@claimFormIntroTitle": {
+    "description": "Headline shown at the top of the claim form."
+  },
+  "claimFormIntroSubtitle": "Provide the incident date and a concise description so we can review your request quickly.",
+  "@claimFormIntroSubtitle": {
+    "description": "Supporting copy shown at the top of the claim form."
+  },
+  "claimDetailsSectionTitle": "Claim Details",
+  "@claimDetailsSectionTitle": {
+    "description": "Section title for the claim form fields."
+  },
+  "claimReviewNote": "We use these details to begin the first review of your claim.",
+  "@claimReviewNote": {
+    "description": "Helper copy below the claim description field."
+  },
+  "claimIncidentDateHint": "Choose the date of the incident",
+  "@claimIncidentDateHint": {
+    "description": "Placeholder text for the claim date selector."
+  },
+  "claimSuccessTitle": "Claim Submitted",
+  "@claimSuccessTitle": {
+    "description": "App bar title for the claim success screen."
+  },
+  "claimSuccessHeadline": "Your claim has been received",
+  "@claimSuccessHeadline": {
+    "description": "Headline shown on the claim success screen."
+  },
+  "claimSuccessDescription": "Our team will review the details and contact you if more information is needed.",
+  "@claimSuccessDescription": {
+    "description": "Supporting copy shown on the claim success screen."
+  },
+  "backToHome": "Back to Home",
+  "@backToHome": {
+    "description": "Button label to return to the main policy list."
   },
   "comingSoon": "This module is scaffolded and ready for implementation.",
   "@comingSoon": {

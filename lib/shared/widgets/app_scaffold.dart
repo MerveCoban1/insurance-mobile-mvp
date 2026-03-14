@@ -10,6 +10,7 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.bottomNavigationBar,
     this.padding = AppSpacing.screenPadding,
+    this.automaticallyImplyLeading = true,
   });
 
   final String? title;
@@ -18,13 +19,18 @@ class AppScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomNavigationBar;
   final EdgeInsetsGeometry padding;
+  final bool automaticallyImplyLeading;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: title == null
           ? null
-          : AppBar(title: Text(title!), actions: actions),
+          : AppBar(
+              title: Text(title!),
+              actions: actions,
+              automaticallyImplyLeading: automaticallyImplyLeading,
+            ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

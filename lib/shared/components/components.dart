@@ -1,1 +1,1 @@
-// Shared composite widgets will live here when cross-feature patterns emerge.
+// Shared composite widgets can be exported here as cross-feature needs emerge.

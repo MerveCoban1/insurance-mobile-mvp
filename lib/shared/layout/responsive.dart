@@ -76,6 +76,14 @@ abstract final class Responsive {
 extension ResponsiveContextExtension on BuildContext {
   ScreenSize get screenSize => Responsive.of(this);
 
+  double get pageSpacing => responsiveSpacing(
+    mobile: AppSpacing.md,
+    tablet: AppSpacing.lg,
+    desktop: AppSpacing.xl,
+  );
+
+  EdgeInsets get pagePadding => EdgeInsets.all(pageSpacing);
+
   double responsiveSpacing({
     double mobile = AppSpacing.md,
     double? tablet,
