@@ -1,0 +1,35 @@
+{
+  "@@locale": "en",
+  "appTitle": "Insurance App",
+  "@appTitle": {
+    "description": "Application title shown in the app shell."
+  },
+  "policies": "Policies",
+  "@policies": {
+    "description": "Title for the policy list area."
+  },
+  "policyDetails": "Policy Details",
+  "@policyDetails": {
+    "description": "Title for the policy detail route."
+  },
+  "submitClaim": "Submit Claim",
+  "@submitClaim": {
+    "description": "Title for the claim submission route."
+  },
+  "incidentDate": "Incident Date",
+  "@incidentDate": {
+    "description": "Claim incident date field label."
+  },
+  "incidentDescription": "Incident Description",
+  "@incidentDescription": {
+    "description": "Claim incident description field label."
+  },
+  "comingSoon": "This module is scaffolded and ready for implementation.",
+  "@comingSoon": {
+    "description": "Generic placeholder message for architecture-only routes."
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Reusable retry action label."
+  }
+}
