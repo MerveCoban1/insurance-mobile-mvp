@@ -1,8 +1,18 @@
 # Insurance Mobile App
 
-Flutter case study project for an insurance mobile app MVP.
+A Flutter MVP demonstrating an insurance policy management and claim submission flow.
+
+The application allows users to:
+
+- view active insurance policies
+- inspect policy details
+- submit a claim for a specific policy
 
 The application is being built around a clean, scalable architecture with a strong focus on separation of concerns, predictable state management, and maintainable feature boundaries.
+
+## Requirements
+
+- Flutter SDK 3.x (Dart ^3.10.7)
 
 ## Tech Stack
 
@@ -64,11 +74,24 @@ Current route structure:
 
 - `/policies`
 - `/policies/:policyId`
-- `/claims/new?policyId=...`
+- `/claims/new/:policyId`
+- `/claims/success`
+
+## Localization
+
+The app uses Flutter's built-in l10n with ARB files. All visible text is localized.
+
+- **Source**: `lib/l10n/` — ARB template `app_en.arb`, generated `AppLocalizations`
+- **Config**: `l10n.yaml` — output class `AppLocalizations`, nullable getters disabled
+- **Supported locales**: English (`en`)
+- **Usage**: `AppLocalizations.of(context)` for lookups; `localizationsDelegates` and `supportedLocales` wired in `MaterialApp.router`
+
+To add a new locale, create `app_<locale>.arb` in `lib/l10n/` and run `flutter gen-l10n`.
 
 ## Current Project Status
 
-The architecture baseline is in place and ready for UI implementation.
+The MVP case study flow is implemented end to end with mocked network responses in
+development.
 
 Implemented so far:
 
@@ -77,7 +100,14 @@ Implemented so far:
 - feature module wiring for `policy` and `claim`
 - mock async policy fetching
 - mock claim submission flow
-- loading, success, and error state foundations
+- policy list, detail, and claim submission screens
+- loading, success, empty, and error states
+
+## Screenshots
+
+| Policies | Policy Details | Submit Claim | Claim Submitted |
+|----------|----------------|--------------|-----------------|
+| ![Policies](docs/policies.png) | ![Policy Details](docs/policy_details.png) | ![Submit Claim](docs/submit_claim.png) | ![Claim Submitted](docs/claim_submitted.png) |
 
 ## Project Structure
 
@@ -120,8 +150,20 @@ flutter pub get
 flutter run
 ```
 
+By default the app uses the `dev` environment, which keeps networking in mock mode
+inside the datasource layer. To switch environments:
+
+```bash
+flutter run --dart-define=APP_ENV=dev
+flutter run --dart-define=APP_ENV=prod
+```
+
+`dev` uses mocked async responses for the case study MVP, while `prod` is prepared
+to call real Dio endpoints with the configured base URL.
+
 To validate the codebase:
 
 ```bash
 flutter analyze
+flutter test
 ```
