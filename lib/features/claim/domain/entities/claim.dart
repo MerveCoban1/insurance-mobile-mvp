@@ -1,3 +1,5 @@
+enum ClaimStatus { submitted, inReview, approved, rejected }
+
 class Claim {
   const Claim({
     required this.id,
@@ -11,5 +13,5 @@ class Claim {
   final String policyId;
   final DateTime incidentDate;
   final String incidentDescription;
-  final String status;
+  final ClaimStatus status;
 }

@@ -3,4 +3,5 @@ import 'package:insurance_mobile/features/policy/domain/entities/policy.dart';
 
 abstract class PolicyRepository {
   ResultFuture<List<Policy>> getPolicies();
+  ResultFuture<Policy?> getPolicyById(String policyId);
 }

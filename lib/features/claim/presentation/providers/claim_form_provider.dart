@@ -15,12 +15,14 @@ class ClaimFormNotifier extends Notifier<ClaimFormState> {
     return const ClaimFormState();
   }
 
-  void initialize({String? policyId}) {
-    if (policyId == null) {
-      return;
-    }
+  void initialize(String policyId) {
+    assert(policyId.trim().isNotEmpty, 'policyId cannot be empty.');
 
     state = ClaimFormState(policyId: policyId);
+  }
+
+  void reset() {
+    state = const ClaimFormState();
   }
 
   void updateIncidentDate(DateTime? value) {
@@ -66,7 +68,7 @@ class ClaimFormNotifier extends Notifier<ClaimFormState> {
         policyId: state.policyId!,
         incidentDate: state.incidentDate!,
         incidentDescription: state.incidentDescription.trim(),
-        status: 'submitted',
+        status: ClaimStatus.submitted,
       ),
     );
 

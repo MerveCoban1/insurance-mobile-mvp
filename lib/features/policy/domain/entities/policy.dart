@@ -1,5 +1,7 @@
 enum PolicyType { vehicle, health, home }
 
+enum PolicyStatus { active, inactive, pending, expired }
+
 class Policy {
   const Policy({
     required this.id,
@@ -9,7 +11,7 @@ class Policy {
     required this.coverageAmount,
     required this.startDate,
     required this.endDate,
-    this.status = 'active',
+    this.status = PolicyStatus.active,
   });
 
   final String id;
@@ -19,5 +21,5 @@ class Policy {
   final double coverageAmount;
   final DateTime startDate;
   final DateTime endDate;
-  final String status;
+  final PolicyStatus status;
 }

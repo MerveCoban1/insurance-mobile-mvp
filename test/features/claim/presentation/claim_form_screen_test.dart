@@ -21,9 +21,7 @@ void main() {
         ],
       );
       addTearDown(container.dispose);
-      container
-          .read(claimFormProvider.notifier)
-          .initialize(policyId: 'policy-1');
+      container.read(claimFormProvider.notifier).initialize('policy-1');
 
       await tester.pumpWidget(
         UncontrolledProviderScope(
@@ -32,7 +30,7 @@ void main() {
             theme: AppTheme.lightTheme,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const ClaimFormScreen(),
+            home: ClaimFormScreen(policyId: 'policy-1'),
           ),
         ),
       );
@@ -49,30 +47,10 @@ void main() {
       expect(find.text('Description is required.'), findsOneWidget);
     });
 
-    testWidgets('shows missing policy message without policy id', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            claimRepositoryProvider.overrideWith(
-              (ref) => _FakeClaimRepository(),
-            ),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.lightTheme,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const ClaimFormScreen(),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
+    test('requires a non-empty policy id', () {
       expect(
-        find.text('A policy reference is required to submit a claim.'),
-        findsOneWidget,
+        () => ClaimFormScreen(policyId: ''),
+        throwsA(isA<AssertionError>()),
       );
     });
   });

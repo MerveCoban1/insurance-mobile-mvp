@@ -25,13 +25,19 @@ class LoadingIndicator extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppSkeleton(width: 96, height: 12),
+                  AppSkeleton(
+                    width: AppSpacing.xxl * 2 + AppSpacing.md,
+                    height: AppSpacing.sm,
+                  ),
                   SizedBox(height: AppSpacing.md),
-                  AppSkeleton(height: 20),
+                  AppSkeleton(height: AppSpacing.lg),
                   SizedBox(height: AppSpacing.xs),
-                  AppSkeleton(width: 220, height: 20),
+                  AppSkeleton(
+                    width: AppSpacing.xxl * 5 + AppSpacing.lg,
+                    height: AppSpacing.lg,
+                  ),
                   SizedBox(height: AppSpacing.lg),
-                  AppSkeleton(height: 52),
+                  AppSkeleton(height: AppSpacing.xxxl + AppSpacing.xxs),
                 ],
               ),
             ),

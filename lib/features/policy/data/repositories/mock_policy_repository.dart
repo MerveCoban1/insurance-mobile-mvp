@@ -41,4 +41,17 @@ class MockPolicyRepository implements PolicyRepository {
 
     return Result.success(List.unmodifiable(_policies));
   }
+
+  @override
+  ResultFuture<Policy?> getPolicyById(String policyId) async {
+    await Future<void>.delayed(const Duration(milliseconds: 700));
+
+    for (final policy in _policies) {
+      if (policy.id == policyId) {
+        return Result.success(policy);
+      }
+    }
+
+    return const Result<Policy?>.success(null);
+  }
 }

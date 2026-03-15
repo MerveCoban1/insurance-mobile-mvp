@@ -1,58 +1,65 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:insurance_mobile/core/error/exceptions.dart';
 import 'package:insurance_mobile/core/types/json_map.dart';
+import 'package:insurance_mobile/features/claim/data/models/claim_json_keys.dart';
 import 'package:insurance_mobile/features/claim/domain/entities/claim.dart';
 
-class ClaimModel {
-  const ClaimModel({
-    required this.id,
-    required this.policyId,
-    required this.incidentDate,
-    required this.incidentDescription,
-    required this.status,
-  });
+part 'claim_model.freezed.dart';
 
-  final String id;
-  final String policyId;
-  final DateTime incidentDate;
-  final String incidentDescription;
-  final String status;
+@freezed
+abstract class ClaimModel with _$ClaimModel {
+  const ClaimModel._();
+
+  const factory ClaimModel({
+    required String id,
+    required String policyId,
+    required DateTime incidentDate,
+    required String incidentDescription,
+    required ClaimStatus status,
+  }) = _ClaimModel;
 
   factory ClaimModel.fromJson(JsonMap json) {
+    final id = json[ClaimJsonKeys.id];
+    final policyId = json[ClaimJsonKeys.policyId];
+    final incidentDate = json[ClaimJsonKeys.incidentDate];
+    final incidentDescription = json[ClaimJsonKeys.incidentDescription];
+    final status = json[ClaimJsonKeys.status];
+
+    if (id == null ||
+        policyId == null ||
+        incidentDate == null ||
+        incidentDescription == null ||
+        status == null) {
+      throw const ParsingException(
+        'Claim response is missing required fields.',
+      );
+    }
+
     return ClaimModel(
-      id: json['id'] as String,
-      policyId: json['policyId'] as String,
-      incidentDate: DateTime.parse(json['incidentDate'] as String),
-      incidentDescription: json['incidentDescription'] as String,
-      status: json['status'] as String,
+      id: id.toString(),
+      policyId: policyId.toString(),
+      incidentDate: DateTime.parse(incidentDate as String),
+      incidentDescription: incidentDescription as String,
+      status: _claimStatusFromJson(status),
     );
   }
 
   JsonMap toJson() {
     return {
-      'id': id,
-      'policyId': policyId,
-      'incidentDate': incidentDate.toIso8601String(),
-      'incidentDescription': incidentDescription,
-      'status': status,
+      ClaimJsonKeys.id: id,
+      ClaimJsonKeys.policyId: policyId,
+      ClaimJsonKeys.incidentDate: incidentDate.toIso8601String(),
+      ClaimJsonKeys.incidentDescription: incidentDescription,
+      ClaimJsonKeys.status: status.name,
     };
   }
+}
 
-  Claim toEntity() {
-    return Claim(
-      id: id,
-      policyId: policyId,
-      incidentDate: incidentDate,
-      incidentDescription: incidentDescription,
-      status: status,
-    );
-  }
+ClaimStatus _claimStatusFromJson(Object? value) {
+  final normalized = (value as String? ?? 'submitted').trim().toLowerCase();
 
-  factory ClaimModel.fromEntity(Claim entity) {
-    return ClaimModel(
-      id: entity.id,
-      policyId: entity.policyId,
-      incidentDate: entity.incidentDate,
-      incidentDescription: entity.incidentDescription,
-      status: entity.status,
-    );
-  }
+  return ClaimStatus.values.firstWhere(
+    (s) => s.name == normalized,
+    orElse: () => ClaimStatus.submitted,
+  );
 }

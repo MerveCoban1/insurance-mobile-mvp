@@ -19,20 +19,26 @@ class PolicyCardSkeleton extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppSkeleton(width: 72, height: 12),
+                    AppSkeleton(
+                      width: AppSpacing.xxl + AppSpacing.xl,
+                      height: AppSpacing.sm,
+                    ),
                     SizedBox(height: AppSpacing.xs),
-                    AppSkeleton(height: 20),
+                    AppSkeleton(height: AppSpacing.lg),
                   ],
                 ),
               ),
             ],
           ),
           SizedBox(height: AppSpacing.lg),
-          AppSkeleton(height: 14),
+          AppSkeleton(height: AppSpacing.md),
           SizedBox(height: AppSpacing.xs),
-          AppSkeleton(width: 180, height: 14),
+          AppSkeleton(
+            width: AppSpacing.xxl * 4 + AppSpacing.md,
+            height: AppSpacing.md,
+          ),
           SizedBox(height: AppSpacing.md),
-          AppSkeleton(height: 52),
+          AppSkeleton(height: AppSpacing.xxxl + AppSpacing.xxs),
         ],
       ),
     );

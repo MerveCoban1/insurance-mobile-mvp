@@ -1,20 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:insurance_mobile/core/error/failures.dart';
+import 'package:insurance_mobile/features/policy/di/di.dart';
 import 'package:insurance_mobile/features/policy/domain/entities/policy.dart';
-import 'package:insurance_mobile/features/policy/presentation/providers/policy_list_provider.dart';
 
-final selectedPolicyProvider = Provider.family<AsyncValue<Policy?>, String>((
+final policyDetailProvider = FutureProvider.family<Policy?, String>((
   ref,
   policyId,
-) {
-  final policiesAsync = ref.watch(policyListProvider);
+) async {
+  final getPolicyById = ref.watch(getPolicyByIdUseCaseProvider);
+  final result = await getPolicyById(policyId);
 
-  return policiesAsync.whenData((policies) {
-    for (final policy in policies) {
-      if (policy.id == policyId) {
-        return policy;
-      }
-    }
+  return result.when(
+    success: (policy) => policy,
+    failure: (failure) => throw PolicyDetailFailureException(failure),
+  );
+}, retry: (retryCount, error) => null);
 
-    return null;
-  });
-});
+class PolicyDetailFailureException implements Exception {
+  const PolicyDetailFailureException(this.failure);
+
+  final Failure failure;
+
+  @override
+  String toString() => failure.message;
+}

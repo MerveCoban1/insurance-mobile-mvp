@@ -32,7 +32,8 @@ class AppScaffold extends StatelessWidget {
               automaticallyImplyLeading: automaticallyImplyLeading,
             ),
       body: SafeArea(
-        child: Center(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(
               maxWidth: AppDesignTokens.maxContentWidth,

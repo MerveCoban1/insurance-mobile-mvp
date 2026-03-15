@@ -9,9 +9,10 @@ import 'package:insurance_mobile/shared/layout/layout.dart';
 import 'package:insurance_mobile/shared/widgets/widgets.dart';
 
 class ClaimFormScreen extends ConsumerStatefulWidget {
-  const ClaimFormScreen({super.key, this.initialPolicyId});
+  ClaimFormScreen({super.key, required this.policyId})
+    : assert(policyId.trim().isNotEmpty, 'policyId cannot be empty.');
 
-  final String? initialPolicyId;
+  final String policyId;
 
   @override
   ConsumerState<ClaimFormScreen> createState() => _ClaimFormScreenState();
@@ -24,12 +25,25 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
   void initState() {
     super.initState();
     _claimFormNotifier = ref.read(claimFormProvider.notifier);
+    _scheduleInitialization(widget.policyId);
+  }
+
+  @override
+  void didUpdateWidget(covariant ClaimFormScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.policyId != widget.policyId) {
+      _scheduleInitialization(widget.policyId);
+    }
+  }
+
+  void _scheduleInitialization(String policyId) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
         return;
       }
 
-      _claimFormNotifier.initialize(policyId: widget.initialPolicyId);
+      _claimFormNotifier.initialize(policyId);
     });
   }
 
@@ -48,11 +62,12 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
 
     final formState = ref.watch(claimFormProvider);
     final spacing = context.pageSpacing;
+    final isInitializing = formState.policyId != widget.policyId;
 
-    if (formState.policyId == null) {
+    if (isInitializing) {
       return AppScaffold(
         title: context.l10n.submitClaim,
-        body: ErrorView(message: context.l10n.policyReferenceRequired),
+        body: const LoadingIndicator(),
       );
     }
 
@@ -70,13 +85,19 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppMessageCard(
-                    useCard: false,
-                    title: context.l10n.claimFormIntroTitle,
-                    subtitle: context.l10n.claimFormIntroSubtitle,
+                  Text(
+                    context.l10n.claimFormIntroTitle,
+                    style: context.textTheme.titleMedium,
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                  _PolicyReferenceCard(policyId: formState.policyId!),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    context.l10n.claimFormIntroSubtitle,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _PolicyReferenceChip(policyId: widget.policyId),
                 ],
               ),
             ),
@@ -95,7 +116,6 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
                         ? context.l10n.claimIncidentDateHint
                         : context.formatDateShort(formState.incidentDate!),
                     hasValue: formState.incidentDate != null,
-                    enabled: !formState.isSubmitting,
                     onPressed: formState.isSubmitting
                         ? null
                         : () => _pickIncidentDate(context),
@@ -121,7 +141,7 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
                       tablet: 5,
                       desktop: 6,
                     ),
-                    minLines: 4,
+                    minLines: 3,
                     enabled: !formState.isSubmitting,
                     onChanged: _claimFormNotifier.updateIncidentDescription,
                     errorText: _descriptionError(context, formState),
@@ -153,7 +173,6 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
   }
 
   Future<void> _pickIncidentDate(BuildContext context) async {
-    final controller = ref.read(claimFormProvider.notifier);
     final state = ref.read(claimFormProvider);
     final now = DateTime.now();
     final selectedDate = await showDatePicker(
@@ -167,31 +186,39 @@ class _ClaimFormScreenState extends ConsumerState<ClaimFormScreen> {
       return;
     }
 
-    controller.updateIncidentDate(selectedDate);
+    _claimFormNotifier.updateIncidentDate(selectedDate);
   }
 }
 
-class _PolicyReferenceCard extends StatelessWidget {
-  const _PolicyReferenceCard({required this.policyId});
+class _PolicyReferenceChip extends StatelessWidget {
+  const _PolicyReferenceChip({required this.policyId});
 
   final String policyId;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppSpacing.md),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: AppLabeledValue(
-          label: context.l10n.policyReference,
-          value: policyId,
-          compact: true,
-          isLast: true,
+    return Row(
+      children: [
+        Icon(
+          Icons.policy_outlined,
+          size: AppSpacing.sm,
+          color: context.colorScheme.onSurfaceVariant,
         ),
-      ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          context.l10n.policyReference,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: context.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          policyId,
+          style: context.textTheme.titleSmall?.copyWith(
+            color: context.colorScheme.primary,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -200,13 +227,11 @@ class _ClaimDateField extends StatelessWidget {
   const _ClaimDateField({
     required this.value,
     required this.hasValue,
-    required this.enabled,
     required this.onPressed,
   });
 
   final String value;
   final bool hasValue;
-  final bool enabled;
   final VoidCallback? onPressed;
 
   @override
@@ -217,7 +242,7 @@ class _ClaimDateField extends StatelessWidget {
       color: colorScheme.surface,
       borderRadius: BorderRadius.circular(AppSpacing.md),
       child: InkWell(
-        onTap: enabled ? onPressed : null,
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(AppSpacing.md),
         child: Ink(
           padding: const EdgeInsets.all(AppSpacing.md),

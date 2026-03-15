@@ -10,9 +10,11 @@ abstract class PolicyRemoteDataSource {
 }
 
 class PolicyRemoteDataSourceImpl implements PolicyRemoteDataSource {
-  PolicyRemoteDataSourceImpl(this._dio);
+  PolicyRemoteDataSourceImpl(this._dio, {required bool useMockApi})
+    : _useMockApi = useMockApi;
 
   final Dio _dio;
+  final bool _useMockApi;
 
   static const List<JsonMap> _mockPoliciesResponse = [
     {
@@ -90,6 +92,6 @@ class PolicyRemoteDataSourceImpl implements PolicyRemoteDataSource {
   }
 
   bool get _shouldUseMockResponse {
-    return _dio.options.baseUrl.contains('insurance-app.com');
+    return _useMockApi;
   }
 }

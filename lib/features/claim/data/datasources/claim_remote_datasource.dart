@@ -9,9 +9,11 @@ abstract class ClaimRemoteDataSource {
 }
 
 class ClaimRemoteDataSourceImpl implements ClaimRemoteDataSource {
-  ClaimRemoteDataSourceImpl(this._dio);
+  ClaimRemoteDataSourceImpl(this._dio, {required bool useMockApi})
+    : _useMockApi = useMockApi;
 
   final Dio _dio;
+  final bool _useMockApi;
 
   @override
   Future<void> submitClaim(ClaimModel claim) async {
@@ -38,6 +40,6 @@ class ClaimRemoteDataSourceImpl implements ClaimRemoteDataSource {
   }
 
   bool get _shouldUseMockResponse {
-    return _dio.options.baseUrl.contains('insurance-app.com');
+    return _useMockApi;
   }
 }

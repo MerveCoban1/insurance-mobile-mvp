@@ -41,13 +41,37 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(claimFormProvider.notifier);
-      notifier.initialize(policyId: 'policy-1');
+      notifier.initialize('policy-1');
 
       final didSubmit = await notifier.submit();
       final state = container.read(claimFormProvider);
 
       expect(didSubmit, isFalse);
       expect(state.hasAttemptedSubmit, isTrue);
+      expect(state.submissionError, ClaimFormSubmissionError.none);
+    });
+
+    test('reinitialize clears stale form state', () {
+      final container = ProviderContainer(
+        overrides: [
+          claimRepositoryProvider.overrideWith((ref) => _FakeClaimRepository()),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final notifier = container.read(claimFormProvider.notifier);
+      notifier.initialize('policy-1');
+      notifier.updateIncidentDate(DateTime(2026, 3, 14));
+      notifier.updateIncidentDescription('Broken windshield');
+      notifier.reset();
+
+      final state = container.read(claimFormProvider);
+
+      expect(state.policyId, isNull);
+      expect(state.incidentDate, isNull);
+      expect(state.incidentDescription, isEmpty);
+      expect(state.hasAttemptedSubmit, isFalse);
+      expect(state.hasSubmitted, isFalse);
       expect(state.submissionError, ClaimFormSubmissionError.none);
     });
 
@@ -65,7 +89,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(claimFormProvider.notifier);
-      notifier.initialize(policyId: 'policy-1');
+      notifier.initialize('policy-1');
       notifier.updateIncidentDate(DateTime(2026, 3, 14));
       notifier.updateIncidentDescription('Broken windshield');
 
@@ -96,7 +120,7 @@ void main() {
       addTearDown(container.dispose);
 
       final notifier = container.read(claimFormProvider.notifier);
-      notifier.initialize(policyId: 'policy-1');
+      notifier.initialize('policy-1');
       notifier.updateIncidentDate(DateTime(2026, 3, 14));
       notifier.updateIncidentDescription('Broken windshield');
 

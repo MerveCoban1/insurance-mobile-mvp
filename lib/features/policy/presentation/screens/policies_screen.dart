@@ -62,10 +62,7 @@ class PolicyListScreen extends ConsumerWidget {
                     startDateLabel:
                         '${context.l10n.startDate}: ${policy.formatStartDate(context)}',
                     onTap: () {
-                      context.push(
-                        AppRoutes.policyDetailLocation(policy.id),
-                        extra: policy,
-                      );
+                      context.push(AppRoutes.policyDetailLocation(policy.id));
                     },
                   ),
                 );
@@ -80,7 +77,7 @@ class PolicyListScreen extends ConsumerWidget {
             ref.invalidate(policyListProvider);
           },
         ),
-        loading: () => _PolicyListLoadingView(spacing: spacing),
+        loading: () => const PolicyListLoadingView(),
       ),
     );
   }
@@ -95,68 +92,6 @@ class _PolicyListIntroCard extends StatelessWidget {
       color: context.colorScheme.primaryContainer.withValues(alpha: 0.42),
       title: context.l10n.policyListIntroTitle,
       subtitle: context.l10n.policyListIntroSubtitle,
-    );
-  }
-}
-
-class _PolicyListLoadingView extends StatelessWidget {
-  const _PolicyListLoadingView({required this.spacing});
-
-  final double spacing;
-
-  @override
-  Widget build(BuildContext context) {
-    final skeletonCount = Responsive.value(
-      context: context,
-      mobile: 3,
-      tablet: 4,
-      desktop: 4,
-    );
-
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: skeletonCount + 2,
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: spacing),
-            child: AppCard(
-              color: context.colorScheme.primaryContainer.withValues(
-                alpha: 0.32,
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppSkeleton(width: 164, height: 12),
-                  SizedBox(height: AppSpacing.md),
-                  AppSkeleton(height: 20),
-                  SizedBox(height: AppSpacing.xs),
-                  AppSkeleton(width: 220, height: 20),
-                ],
-              ),
-            ),
-          );
-        }
-
-        if (index == 1) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: spacing),
-            child: Text(
-              context.l10n.loadingPolicies,
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          );
-        }
-
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: index == skeletonCount + 1 ? 0 : spacing,
-          ),
-          child: const PolicyCardSkeleton(),
-        );
-      },
     );
   }
 }

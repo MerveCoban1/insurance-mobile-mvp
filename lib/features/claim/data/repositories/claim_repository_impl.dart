@@ -3,7 +3,7 @@ import 'package:insurance_mobile/core/error/failure_mapper.dart';
 import 'package:insurance_mobile/core/error/failures.dart';
 import 'package:insurance_mobile/core/result/result.dart';
 import 'package:insurance_mobile/features/claim/data/datasources/claim_remote_datasource.dart';
-import 'package:insurance_mobile/features/claim/data/models/claim_model.dart';
+import 'package:insurance_mobile/features/claim/data/mappers/claim_mapper.dart';
 import 'package:insurance_mobile/features/claim/domain/entities/claim.dart';
 import 'package:insurance_mobile/features/claim/domain/repositories/claim_repository.dart';
 
@@ -15,7 +15,7 @@ class ClaimRepositoryImpl implements ClaimRepository {
   @override
   ResultFuture<void> submitClaim(Claim claim) async {
     try {
-      await _remoteDataSource.submitClaim(ClaimModel.fromEntity(claim));
+      await _remoteDataSource.submitClaim(claim.toModel());
 
       return const Result.success(null);
     } on AppException catch (exception, stackTrace) {

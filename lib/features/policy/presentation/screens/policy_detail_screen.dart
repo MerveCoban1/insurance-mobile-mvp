@@ -11,41 +11,34 @@ import 'package:insurance_mobile/shared/layout/layout.dart';
 import 'package:insurance_mobile/shared/widgets/widgets.dart';
 
 class PolicyDetailScreen extends ConsumerWidget {
-  const PolicyDetailScreen({
-    super.key,
-    required this.policyId,
-    this.initialPolicy,
-  });
+  const PolicyDetailScreen({super.key, required this.policyId});
 
   final String policyId;
-  final Policy? initialPolicy;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppScaffold(
       title: context.l10n.policyDetails,
       padding: context.pagePadding,
-      body: initialPolicy != null
-          ? _PolicyDetailContent(policy: initialPolicy!)
-          : ref
-                .watch(selectedPolicyProvider(policyId))
-                .when(
-                  data: (policy) {
-                    if (policy == null) {
-                      return ErrorView(message: context.l10n.policyNotFound);
-                    }
+      body: ref
+          .watch(policyDetailProvider(policyId))
+          .when(
+            data: (policy) {
+              if (policy == null) {
+                return ErrorView(message: context.l10n.policyNotFound);
+              }
 
-                    return _PolicyDetailContent(policy: policy);
-                  },
-                  error: (_, _) => ErrorView(
-                    message: context.l10n.policyDetailLoadError,
-                    actionLabel: context.l10n.retry,
-                    onActionPressed: () {
-                      ref.invalidate(policyListProvider);
-                    },
-                  ),
-                  loading: () => const _PolicyDetailSkeleton(),
-                ),
+              return _PolicyDetailContent(policy: policy);
+            },
+            error: (_, _) => ErrorView(
+              message: context.l10n.policyDetailLoadError,
+              actionLabel: context.l10n.retry,
+              onActionPressed: () {
+                ref.invalidate(policyDetailProvider(policyId));
+              },
+            ),
+            loading: () => const PolicyDetailSkeleton(),
+          ),
     );
   }
 }
@@ -87,15 +80,9 @@ class _PolicyDetailContent extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            policy.localizedType(context),
-                            style: context.textTheme.headlineSmall,
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                        ],
+                      child: Text(
+                        policy.localizedType(context),
+                        style: context.textTheme.headlineSmall,
                       ),
                     ),
                   ],
@@ -140,72 +127,12 @@ class _PolicyDetailContent extends StatelessWidget {
               label: context.l10n.submitClaim,
               isExpanded: Responsive.isMobile(context),
               onPressed: () {
-                context.push(AppRoutes.claimFormLocation(policyId: policy.id));
+                context.push(AppRoutes.claimFormLocation(policy.id));
               },
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _PolicyDetailSkeleton extends StatelessWidget {
-  const _PolicyDetailSkeleton();
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  AppSkeleton(width: AppSpacing.xxxl, height: AppSpacing.xxxl),
-                  SizedBox(width: AppSpacing.md),
-                  Expanded(child: AppSkeleton(height: 24)),
-                ],
-              ),
-              SizedBox(height: AppSpacing.lg),
-              AppSkeleton(width: 180, height: 14),
-              SizedBox(height: AppSpacing.xs),
-              AppSkeleton(width: 220, height: 14),
-              SizedBox(height: AppSpacing.md),
-              AppSkeleton(width: 84, height: 28),
-            ],
-          ),
-        ),
-        SizedBox(height: AppSpacing.lg),
-        AppSkeleton(width: 160, height: 20),
-        SizedBox(height: AppSpacing.md),
-        AppCard(
-          child: Column(
-            children: [
-              AppSkeleton(height: 16),
-              SizedBox(height: AppSpacing.md),
-              AppSkeleton(height: 16),
-              SizedBox(height: AppSpacing.md),
-              AppSkeleton(height: 16),
-            ],
-          ),
-        ),
-        SizedBox(height: AppSpacing.lg),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppSkeleton(width: 180, height: 20),
-              SizedBox(height: AppSpacing.xs),
-              AppSkeleton(height: 14),
-              SizedBox(height: AppSpacing.lg),
-              AppSkeleton(height: 52),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

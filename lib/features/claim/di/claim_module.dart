@@ -6,9 +6,10 @@ import 'package:insurance_mobile/features/claim/domain/repositories/claim_reposi
 import 'package:insurance_mobile/features/claim/domain/usecases/submit_claim.dart';
 
 final claimRemoteDataSourceProvider = Provider<ClaimRemoteDataSource>((ref) {
+  final appConfig = ref.watch(appConfigProvider);
   final dio = ref.watch(dioProvider);
 
-  return ClaimRemoteDataSourceImpl(dio);
+  return ClaimRemoteDataSourceImpl(dio, useMockApi: appConfig.useMockApi);
 });
 
 final claimRepositoryProvider = Provider<ClaimRepository>((ref) {

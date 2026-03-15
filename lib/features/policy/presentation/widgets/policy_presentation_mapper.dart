@@ -32,34 +32,31 @@ extension PolicyPresentationMapper on Policy {
   }
 
   String localizedStatus(BuildContext context) {
-    return switch (status.trim().toLowerCase()) {
-      'active' => context.l10n.policyStatusActive,
-      'inactive' => context.l10n.policyStatusInactive,
-      'pending' => context.l10n.policyStatusPending,
-      'expired' => context.l10n.policyStatusExpired,
-      _ => status,
+    return switch (status) {
+      PolicyStatus.active => context.l10n.policyStatusActive,
+      PolicyStatus.inactive => context.l10n.policyStatusInactive,
+      PolicyStatus.pending => context.l10n.policyStatusPending,
+      PolicyStatus.expired => context.l10n.policyStatusExpired,
     };
   }
 
   Color statusForegroundColor(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return switch (status.trim().toLowerCase()) {
-      'active' => const Color(0xFF166534),
-      'pending' => const Color(0xFF92400E),
-      'expired' => colorScheme.error,
-      'inactive' => colorScheme.onSurfaceVariant,
-      _ => colorScheme.onSurface,
+    return switch (status) {
+      PolicyStatus.active => const Color(0xFF166534),
+      PolicyStatus.pending => const Color(0xFF92400E),
+      PolicyStatus.expired => colorScheme.error,
+      PolicyStatus.inactive => colorScheme.onSurfaceVariant,
     };
   }
 
   Color statusBackgroundColor(BuildContext context) {
-    return switch (status.trim().toLowerCase()) {
-      'active' => const Color(0xFFDCFCE7),
-      'pending' => const Color(0xFFFEF3C7),
-      'expired' => const Color(0xFFFEE2E2),
-      'inactive' => const Color(0xFFE2E8F0),
-      _ => Theme.of(context).colorScheme.surfaceContainerHighest,
+    return switch (status) {
+      PolicyStatus.active => const Color(0xFFDCFCE7),
+      PolicyStatus.pending => const Color(0xFFFEF3C7),
+      PolicyStatus.expired => const Color(0xFFFEE2E2),
+      PolicyStatus.inactive => const Color(0xFFE2E8F0),
     };
   }
 }
